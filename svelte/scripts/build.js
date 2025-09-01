@@ -1,32 +1,30 @@
-import { readFile, writeFile } from 'fs/promises';
-import { exists, exec, getFiles, getPackage } from './utils.js';
-
-const pkg = await getPackage();
-let fxmanifest = `${await readFile('./src/__resource.lua', 'utf8')}
-name '${pkg.name}'
-author '${pkg.author}'
-version '${pkg.version}'
-description '${pkg.description}'\n`;
+import { exists, exec, getFiles, createFxmanifest } from './utils.js';
 
 const environments = [];
-const production = process.argv.includes('--mode=production');
-
-fxmanifest += `\nui_page 'web/index.html'\n`;
-fxmanifest += `\nshared_script '@ox_lib/init.lua'\n`;
+const outfiles = {}
+const watch = process.argv.includes('--watch');
 
 if (await exists('../client')) environments.push('client');
 if (await exists('../server')) environments.push('server');
 
 for (const context of environments) {
-    const files = await getFiles(`../${context}`);
-    
-    fxmanifest += `\n${context}_scripts {\n\t'${files.filter((file) => file).join("',\n\t'")}',\n}\n`;
-};
+    const files = await getFiles(context);
 
-await exec(`cd ./ && vite ${production ? 'build' : 'build --watch'}`);
+    outfiles[context] = files
+}
 
-const files = await getFiles('../web');
+await exec(`cd ./ && vite ${watch ? 'build --watch' : 'build'}`);
 
-fxmanifest += `\nfiles {\n\t'${files.filter((file) => !file.endsWith('svg')).join("',\n\t'")}',\n}`;
+const files = await getFiles('web/dist');
 
-writeFile('../fxmanifest.lua', fxmanifest);
+await createFxmanifest(
+    [...outfiles['client']],
+    [...outfiles['server']],
+    ['@ox_lib/init.lua'],
+    [...files],
+    ['/server:13068', '/onesync'],
+    {
+        ui_page: 'dist/web/index.html',
+        node_version: '22'
+    },
+);
