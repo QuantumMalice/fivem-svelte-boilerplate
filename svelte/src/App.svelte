@@ -1,31 +1,29 @@
 <script lang="ts">
   import { fetchNui } from './utils/fetchNui'
   import { useNuiEvent } from './utils/useNuiEvent'
-  import { browser, isVisible, setVisible } from './states/app.svelte'
+  import { app, browser } from './states/app.svelte'
   import Menu from './components/Menu.svelte';
-
-  const visible = $derived(isVisible())
   
   function onKeyDown(key: KeyboardEvent) {
     const is_escape = ['Escape'].includes(key.code)
   
-    if (visible && is_escape) {
+    if (app.visible && is_escape) {
       if (!browser) fetchNui('close')
-      setVisible(false)
-    } else if (browser && !visible && is_escape) {
-      setVisible(true)
+      app.visible = false
+    } else if (browser && !app.visible && is_escape) {
+      app.visible = true
     }
   }
 
   useNuiEvent<boolean>('setVisible', (state: boolean) => {
-    setVisible(state)
+    app.visible = state
   });
 </script>
 
 <svelte:window on:keydown={onKeyDown}/>
 
 <main>
-  {#if visible}
+  {#if app.visible}
     <Menu />
   {/if}
   {#if import.meta.env.DEV}

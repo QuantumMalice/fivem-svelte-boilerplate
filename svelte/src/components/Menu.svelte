@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import { setVisible } from '../states/app.svelte';
   import { fetchNui } from '../utils/fetchNui';
+  import { app } from '../states/app.svelte';
 
   type Coords = {
     x: number,
@@ -22,7 +22,7 @@
   }
 
   const close = () => {
-    setVisible(false)
+    app.visible = false
     fetchNui('close')
   }
 </script>
