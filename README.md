@@ -26,15 +26,13 @@ Install dependencies by navigating to the `svelte` folder within a terminal of y
 
 **Toggling main visibility**
 
-You can exit the UI frame using the `ESC` key, if you need to forcefully
-hide it you can use `setVisible(false)`, *setVisible* being an exported function
-from the Svelte states. Or if you need to check if the UI frame is currently
-visible you can use `isVisible()`, *isVisible* also being an exported function
-form the Svelte states.
+You can exit the UI frame using the `ESC` key, if you need to forcefully hide it you can
+use `app.visible = false`, *app.visible* being a Svelte state. Or if you need to check if the
+UI frame is currently visible you can use `app.visible`, *app.visible* also being a Svelte state.
 
 Before being able to change the visibility state you must first import it from `states/app.svelte`
 ```svelte
-<button onclick={() => setVisible(false)}>
+<button onclick={() => {app.visible = false}}>
   Exit
 </button>
 ```
