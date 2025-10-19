@@ -1,16 +1,16 @@
 <script lang="ts">
-    import DevBat from './Bat.svelte';
-    import DevImage from './Image.svelte';
+    import Noctis from './Noctis.svelte';
+    import Image from './Image.svelte';
 </script>
 
 <section>
     <div class="container">
         <div class="bat-wrapper">
-            <DevBat />
+            <Noctis />
         </div>
 
         <div class="w-full h-full fixed inset-0 z-[-9999] bg-no-repeat">
-        <DevImage />
+            <Image />
         </div>
     </div>
 </section>
