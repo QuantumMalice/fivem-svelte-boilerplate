@@ -15,7 +15,7 @@ for (const context of environments) {
 
 await exec(`cd ./ && vite ${watch ? 'build --watch' : 'build'}`);
 
-const files = await getFiles('web/dist');
+const files = await getFiles('web');
 
 await createFxmanifest(
     [...outfiles['client']],
@@ -24,7 +24,7 @@ await createFxmanifest(
     [...files],
     ['/server:13068', '/onesync'],
     {
-        ui_page: 'dist/web/index.html',
+        ui_page: 'web/index.html',
         node_version: '22'
     },
 );
